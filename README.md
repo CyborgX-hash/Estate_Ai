@@ -1,113 +1,105 @@
-🏠 Milestone 1: ML-Based Property Price Prediction
-📌 Overview
+🏠 Intelligent Property Price Prediction
+📌 Milestone 1 – ML-Based Property Price Prediction System
+📖 Overview
 
-Milestone 1 focuses on building a Machine Learning-based Property Price Prediction System using classical ML techniques. The goal is to design an end-to-end predictive analytics pipeline that estimates property prices based on historical listing data and property features.
+Milestone 1 focuses on building a Machine Learning-based Property Price Prediction System using classical ML techniques.
 
-This phase strictly avoids LLMs and agentic workflows, emphasizing traditional ML modeling, preprocessing, evaluation, and UI integration.
+The system analyzes historical real estate listing data and predicts property prices based on structured features such as location, size, and amenities.
+
+⚠️ This milestone strictly uses traditional ML workflows (No LLMs / No Agentic AI).
 
 🎯 Objective
 
-To develop a reliable and interpretable machine learning system that:
+Build an end-to-end ML pipeline for property price prediction
 
-Accepts property feature data as input
+Perform proper data preprocessing & feature engineering
 
-Performs data preprocessing
+Train and compare regression models
 
-Trains predictive models
+Evaluate performance using standard metrics
 
-Evaluates model performance
+Deploy the system with a user-friendly interface
 
-Displays predicted property prices through a user interface
-
-📊 Features Used
-
-The model predicts property prices using key real estate attributes such as:
-
-📍 Location
-
-📐 Property Size (Area)
-
-🛏 Number of Rooms
-
-🏊 Amenities
-
-🏠 Other structured listing features
-
-🛠️ Technical Implementation
-🔹 Data Preprocessing
+🧠 Features Used for Prediction
+Feature Type	Examples
+📍 Location	City / Area
+📐 Property Size	Square footage / Area
+🛏 Rooms	Bedrooms / Bathrooms
+🏊 Amenities	Parking, Garden, Pool, etc.
+🏠 Other Attributes	Structured listing data
+⚙️ Technical Implementation
+🔹 1. Data Preprocessing
 
 Handling missing values
 
-Categorical feature encoding
+Encoding categorical variables
 
 Feature scaling
 
-Data cleaning and transformation using Scikit-Learn pipelines
+Data cleaning & transformation
 
-🔹 Machine Learning Models
+Implemented using Scikit-Learn Pipelines
 
-Linear Regression
+🔹 2. Machine Learning Models
 
-Random Forest Regressor
+📈 Linear Regression
 
-Decision Tree Regressor
+🌳 Decision Tree Regressor
 
-🔹 Model Evaluation Metrics
+🌲 Random Forest Regressor
 
-Mean Absolute Error (MAE)
+Models are trained and compared to identify the best-performing approach.
 
-Root Mean Squared Error (RMSE)
+🔹 3. Evaluation Metrics
 
-R-squared (R² Score)
+The models are evaluated using:
 
-These metrics help assess accuracy, generalization, and overall model reliability.
+MAE (Mean Absolute Error) – Measures average prediction error
 
-🔄 Input & Output
-Input:
+RMSE (Root Mean Squared Error) – Penalizes large errors
+
+R² Score (R-squared) – Measures explained variance
+
+🔄 System Workflow
+1️⃣ Load Dataset (CSV)
+2️⃣ Data Cleaning & Preprocessing
+3️⃣ Feature Engineering
+4️⃣ Model Training
+5️⃣ Model Evaluation
+6️⃣ UI Integration
+7️⃣ Real-Time Price Prediction
+📥 Input & 📤 Output
+✅ Input
 
 Property dataset (CSV format)
 
-Structured feature inputs via UI
+User-entered property details via UI
 
-Output:
+✅ Output
 
-Predicted property price or price range
+Predicted property price / price range
 
-Model evaluation metrics
+Model performance metrics
 
-Basic price driver insights
+Basic feature importance insights
 
 🖥️ User Interface
 
-A simple and interactive UI built using:
+Built using:
 
 Streamlit / Gradio
 
 The interface allows users to:
 
-Enter property details
+Enter property features
 
-View predicted price
+Get instant price predictions
 
-Understand model performance
-
-🏗️ System Workflow
-
-Load property dataset
-
-Preprocess data (cleaning, encoding, scaling)
-
-Train ML models
-
-Evaluate performance
-
-Deploy model with UI
-
-Generate real-time price predictions
+View evaluation results
 
 🚀 Deployment
 
-The application is publicly hosted using a free-tier platform such as:
+The application is publicly hosted using free-tier platforms such as:
 
 Hugging Face Spaces
 
@@ -115,16 +107,20 @@ Streamlit Community Cloud
 
 Render
 
-(Localhost-only demonstrations are not accepted.)
+⚠️ Localhost-only deployment is not accepted.
 
-📌 Outcome
+📊 Milestone 1 Deliverables
 
-Milestone 1 successfully demonstrates:
+✔️ Working ML-based price prediction system
 
-Proper application of classical ML techniques
+✔️ Proper preprocessing & feature engineering
 
-Effective feature engineering and preprocessing
+✔️ Performance evaluation report
 
-Reliable price prediction system
+✔️ Publicly deployed application
 
-Clean and modular implementation with public deployment
+✔️ Clean, modular, and well-documented codebase
+
+🏁 Conclusion
+
+Milestone 1 establishes a strong foundation in classical machine learning for real estate price prediction, ensuring robust preprocessing, reliable model evaluation, and practical deployment.
