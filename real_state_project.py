@@ -8,17 +8,13 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error
 
-# -------------------------
-# PAGE CONFIG
-# -------------------------
+
 st.set_page_config(
     page_title="EstateAI",
     layout="wide"
 )
 
-# -------------------------
-# CUSTOM CSS
-# -------------------------
+
 st.markdown("""
 <style>
 .main {
