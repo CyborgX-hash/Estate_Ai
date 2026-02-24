@@ -1,136 +1,128 @@
-🏠 Intelligent Property Price Prediction
+# 🏠 EstateAI — Intelligent Real Estate Price Prediction
 
-📌 Milestone 1 – ML-Based Property Price Prediction System
+**Milestone 1 – ML-Based Property Price Prediction System**
 
-📖 Overview
+---
 
-Milestone 1 focuses on building a Machine Learning-based Property Price Prediction System using classical ML techniques.
+## 📖 Overview
 
-The system analyzes historical real estate listing data and predicts property prices based on structured features such as location, size, and amenities.
+EstateAI is a Machine Learning-based property price prediction platform built with **Streamlit**. It analyzes historical real estate listing data and predicts sale prices based on structured features such as location, carpet area, and amenities.
 
-🎯 Objective
+---
 
-Build an end-to-end ML pipeline for property price prediction
+## 🎯 Objective
 
-Perform proper data preprocessing & feature engineering
+- Build an end-to-end ML pipeline for property price prediction
+- Perform data preprocessing & feature engineering
+- Train and compare regression models
+- Evaluate performance using standard metrics
+- Deploy with a user-friendly interactive interface
 
-Train and compare regression models
+---
 
-Evaluate performance using standard metrics
+## 🧠 Features Used for Prediction
 
-Deploy the system with a user-friendly interface
+| Feature Type       | Examples                        |
+|--------------------|---------------------------------|
+| 📍 Location        | Locality (one-hot encoded)      |
+| 📐 Property Size   | Carpet Area (sq ft)             |
+| 🛏 Rooms           | Bedrooms, Bathrooms             |
+| 🏠 Other Attributes| Property type, Face, Residential|
+| 📅 Date            | Year, Month extracted from Date |
+| 💰 Valuation       | Estimated Market Value          |
 
-🧠 Features Used for Prediction
+---
 
-Feature Type Examples
+## ⚙️ Technical Implementation
 
-📍 Location City / Area
+### 🔹 1. Data Preprocessing
+- Handling missing values (mode/median imputation)
+- Encoding categorical variables (`pd.get_dummies`)
+- IQR-based outlier removal on `Sale Price`, `Estimated Value`, `carpet_area`
+- Date feature extraction (month, day)
 
-📐 Property Size Square footage / Area
+### 🔹 2. Machine Learning Models
 
-🛏 Rooms Bedrooms / Bathrooms
+| Model | Details |
+|-------|---------|
+| 🌲 **Random Forest Regressor** | Recommended — captures non-linear patterns |
+| 📈 **Linear Regression** | Baseline comparison model |
 
-🏊 Amenities Parking, Garden, Pool, etc.
+### 🔹 3. Evaluation Metrics
 
-🏠 Other Attributes Structured listing data
+| Metric | Description |
+|--------|-------------|
+| **R² Score** | Measures explained variance |
+| **MAE** (Mean Absolute Error) | Average prediction error |
+| **RMSE** (Root Mean Squared Error) | Penalizes large errors |
 
-⚙️ Technical Implementation
+---
 
-🔹 1. Data Preprocessing
+## 📊 Dashboard Features
 
-Handling missing values
+- **Market Insights**: Box plot of Sale Price distribution + Area vs Price scatter plot
+- **Model Performance**: R², MAE, and RMSE metric cards
+- **Predicted vs Actual Chart**: Scatter plot comparing predictions to ground truth
+- **Feature Importance**: Top 10 most influential features (Random Forest only)
+- **Price Predictor**: Interactive form to get instant price predictions
 
-Encoding categorical variables
+---
 
-Feature scaling
+## 🔄 System Workflow
 
-Data cleaning & transformation
-Implemented using Scikit-Learn Pipelines
+1. Load Dataset (`V3.csv`)
+2. Data Cleaning & Preprocessing
+3. Feature Engineering (encoding + date extraction)
+4. Outlier Removal (IQR method)
+5. Model Training (Random Forest / Linear Regression)
+6. Model Evaluation (R², MAE, RMSE)
+7. Visualizations & Real-Time Prediction via Streamlit UI
 
-🔹 2. Machine Learning Models
+---
 
-📈 Linear Regression
+## 🚀 Deployment
 
-🌳 Decision Tree Regressor
+The application is deployed using **Streamlit Community Cloud**.
 
-🌲 Random Forest Regressor
-Models are trained and compared to identify the best-performing approach.
+> ⚠️ Localhost-only deployment is not accepted.
 
-🔹 3. Evaluation Metrics
+---
 
-The models are evaluated using:
+## 📦 Requirements
 
-MAE (Mean Absolute Error) – Measures average prediction error
+```
+streamlit
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+```
 
-RMSE (Root Mean Squared Error) – Penalizes large errors
+Install with:
+```bash
+pip install -r requirements.txt
+```
 
-R² Score (R-squared) – Measures explained variance
-🔄 System Workflow
+Run locally:
+```bash
+streamlit run real_state_project.py
+```
 
-1️⃣ Load Dataset (CSV)
+---
 
-2️⃣ Data Cleaning & Preprocessing
+## 📊 Milestone 1 Deliverables
 
-3️⃣ Feature Engineering
+- ✔️ Working ML-based price prediction system
+- ✔️ Proper preprocessing & feature engineering
+- ✔️ Performance evaluation (R², MAE, RMSE)
+- ✔️ Predicted vs Actual visualization
+- ✔️ Feature importance chart
+- ✔️ Publicly deployed application
+- ✔️ Clean, modular, and well-documented codebase
 
-4️⃣ Model Training
+---
 
-5️⃣ Model Evaluation
+## 🏁 Conclusion
 
-6️⃣ UI Integration
-
-7️⃣ Real-Time Price Prediction
-
-📥 Input & 📤 Output
-
-✅ Input
-
-Property dataset (CSV format)
-
-User-entered property details via UI
-✅ Output
-
-Predicted property price / price range
-
-Model performance metrics
-Basic feature importance insights
-
-🖥️ User Interface
-
-Built using:
-
-Streamlit / Gradio
-The interface allows users to:
-
-Enter property features
-
-Get instant price predictions
-
-View evaluation results
-🚀 Deployment
-
-The application is publicly hosted using free-tier platforms such as:
-
-Hugging Face Spaces
-
-Streamlit Community Cloud
-
-Render
-
-⚠️ Localhost-only deployment is not accepted.
-
-📊 Milestone 1 Deliverables
-
-✔️ Working ML-based price prediction system
-
-✔️ Proper preprocessing & feature engineering
-
-✔️ Performance evaluation report
-
-✔️ Publicly deployed application
-
-✔️ Clean, modular, and well-documented codebase
-
-🏁 Conclusion
-
-Milestone 1 establishes a strong foundation in classical machine learning for real estate price prediction, ensuring robust preprocessing, reliable model evaluation, and practical deployment.
+EstateAI establishes a strong foundation in classical machine learning for real estate price prediction, ensuring robust preprocessing, reliable model evaluation with three metrics (R², MAE, RMSE), and an interactive Streamlit dashboard with feature importance and prediction visualizations.
