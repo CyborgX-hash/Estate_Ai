@@ -1,12 +1,13 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
 
 st.set_page_config(
@@ -170,13 +171,32 @@ y_pred = model.predict(X_test)
 # -------------------------
 st.markdown("##Model Performance")
 
-col3, col4 = st.columns(2)
+rmse = round(np.sqrt(mean_squared_error(y_test, y_pred)), 2)
+
+col3, col4, col5 = st.columns(3)
 
 with col3:
     st.metric("R² Score", round(r2_score(y_test, y_pred), 4))
 
 with col4:
     st.metric("Mean Absolute Error", round(mean_absolute_error(y_test, y_pred), 2))
+
+with col5:
+    st.metric("RMSE", rmse)
+
+# Predicted vs Actual Chart
+st.markdown("### 📈 Predicted vs Actual Sale Price")
+fig_pred, ax_pred = plt.subplots(figsize=(7, 4))
+ax_pred.scatter(y_test, y_pred, alpha=0.5, color='#667eea', edgecolors='none')
+ax_pred.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2, label='Perfect Fit')
+ax_pred.set_xlabel("Actual Price", color='white')
+ax_pred.set_ylabel("Predicted Price", color='white')
+ax_pred.set_title("Predicted vs Actual Sale Price", color='white')
+ax_pred.tick_params(colors='white')
+ax_pred.set_facecolor('#1E1E2F')
+fig_pred.patch.set_facecolor('#0E1117')
+ax_pred.legend()
+st.pyplot(fig_pred)
 
 st.markdown("---")
 
