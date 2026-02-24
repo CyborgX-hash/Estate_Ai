@@ -85,7 +85,6 @@ EstateAI is a Machine Learning-based property price prediction platform built wi
 
 The application is deployed using **Streamlit Community Cloud**.
 
-> ⚠️ Localhost-only deployment is not accepted.
 
 ---
 
