@@ -61,6 +61,7 @@ EstateAI is a Machine Learning-based property price prediction platform built wi
 ## 📊 Dashboard Features
 
 - **Market Insights**: Box plot of Sale Price distribution + Area vs Price scatter plot
+- **Correlation Heatmap**: Heatmap of correlations between key numerical features (Sale Price, Estimated Value, Carpet Area, Rooms, Bathrooms, Tax Rate)
 - **Model Performance**: R², MAE, and RMSE metric cards
 - **Predicted vs Actual Chart**: Scatter plot comparing predictions to ground truth
 - **Feature Importance**: Top 10 most influential features (Random Forest only)
