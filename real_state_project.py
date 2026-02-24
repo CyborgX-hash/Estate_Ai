@@ -181,6 +181,22 @@ with col4:
 st.markdown("---")
 
 # -------------------------
+# FEATURE IMPORTANCE
+# -------------------------
+if "Random Forest" in model_choice:
+    st.markdown("## 🔍 Feature Importance")
+    importances = pd.Series(model.feature_importances_, index=feature_columns)
+    top10 = importances.nlargest(10).sort_values()
+    fig3, ax3 = plt.subplots(figsize=(8, 5))
+    top10.plot(kind='barh', ax=ax3, color='#667eea')
+    ax3.set_title("Top 10 Most Influential Features", color='white')
+    ax3.tick_params(colors='white')
+    ax3.set_facecolor('#1E1E2F')
+    fig3.patch.set_facecolor('#0E1117')
+    st.pyplot(fig3)
+    st.markdown("---")
+
+# -------------------------
 # PREDICTION SECTION
 # -------------------------
 st.markdown("## Predict Property Price")
