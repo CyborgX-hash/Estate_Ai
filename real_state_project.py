@@ -653,7 +653,6 @@ def advisor_node(state: AgentState) -> AgentState:
         state["error"] = f"Advisor: {e}"; state["final_advice"] = "Advisory unavailable."
     return state
 
-@st.cache_resource
 def build_graph():
     g = StateGraph(AgentState)
     g.add_node("predict", predict_node)
