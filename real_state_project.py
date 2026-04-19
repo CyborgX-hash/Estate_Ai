@@ -575,12 +575,17 @@ def retrieve_market(query: str, vs) -> List[str]:
         return [f"Retrieval error: {e}"]
     
 
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
 @st.cache_resource
 def get_llm():
     try:
-        return pipeline("text2text-generation", model="google/flan-t5-base")
+        tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+        model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+        return {"tokenizer": tokenizer, "model": model}
     except Exception as e:
-        logger.error(f"LLM init failed: {e}"); return None
+        logger.error(f"LLM init failed: {e}")
+        return None
 
 def generate_advice(input_data, price, market, llm) -> str:
     if llm is None: return "AI advisor unavailable."
@@ -601,8 +606,12 @@ def generate_advice(input_data, price, market, llm) -> str:
         "3. Key Risk Factors\n4. Final Advice\n5. Disclaimer"
     )
     try:
-        result = llm(prompt, max_new_tokens=300, truncation=True)
-        advice = result[0]["generated_text"].strip()
+        tokenizer = llm["tokenizer"]
+        model = llm["model"]
+        inputs = tokenizer(prompt, return_tensors="pt")
+        outputs = model.generate(**inputs, max_new_tokens=300)
+        advice = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+        
         if not advice or len(advice) < 20:
             return "AI advisor could not generate a response for these inputs."
         if any(p in advice.lower() for p in ["ignore previous","disregard","jailbreak"]):
