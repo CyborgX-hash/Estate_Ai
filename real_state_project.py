@@ -697,3 +697,34 @@ st.session_state["feature_columns"] = feature_columns
 st.session_state["vectorstore"]     = vectorstore
 st.session_state["llm"]             = llm
 st.session_state["df_raw"]          = df_raw
+
+# =============================================================================
+# SIDEBAR
+# =============================================================================
+with st.sidebar:
+    st.markdown('<div class="sidebar-section">📊 Model Performance</div>', unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        st.metric("R² Score",   f"{model_metrics['R² Score']:.4f}")
+        st.metric("Train Rows", f"{model_metrics['Train Rows']:,}")
+    with c2:
+        st.metric("MAE",        f"₹{model_metrics['MAE']:,.0f}")
+        st.metric("Test Rows",  f"{model_metrics['Test Rows']:,}")
+    st.metric("RMSE", f"₹{model_metrics['RMSE']:,.0f}")
+
+    st.markdown('<div class="sidebar-section">🔗 Agent Workflow</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="workflow-box">
+        Input <span class="arrow">→</span> <span class="node">predict_node</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">→</span> <span class="node">rag_node</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">→</span> <span class="node">comps_node</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">→</span> <span class="node">advisor_node</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">→</span> <span class="node">END</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="sidebar-section">⚙️ Stack</div>', unsafe_allow_html=True)
+    for pill in ["Random Forest","FAISS RAG","Flan-T5","LangGraph","Streamlit"]:
+        st.markdown(f'<span class="pill">{pill}</span>', unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.caption("EstateAI v2.0 · For informational use only")
