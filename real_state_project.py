@@ -773,3 +773,10 @@ with col3:
     st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
+
+# =============================================================================
+# CTA BUTTON — centred
+# =============================================================================
+_, btn_col, _ = st.columns([1, 2, 1])
+with btn_col:
+    run_clicked = st.button("⚡  Analyse Property & Generate Report")
