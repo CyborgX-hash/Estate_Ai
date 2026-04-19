@@ -780,3 +780,154 @@ st.markdown("<br>", unsafe_allow_html=True)
 _, btn_col, _ = st.columns([1, 2, 1])
 with btn_col:
     run_clicked = st.button("⚡  Analyse Property & Generate Report")
+
+# =============================================================================
+# RUN AGENT
+# =============================================================================
+if run_clicked:
+
+    input_data: Dict[str, Any] = {
+        "property_tax_rate": tax_rate,
+        "carpet_area":       carpet_area,
+        "num_bathrooms":     num_bathrooms,
+        "num_rooms":         num_rooms,
+        "Estimated Value":   estimated_value,
+        "Year":              year,
+        "month":             month,
+    }
+
+    errors = validate_input(input_data)
+    if errors:
+        for e in errors:
+            st.error(f"⚠️ {e}")
+        st.stop()
+
+    with st.spinner("🤖  Agent running — predicting · retrieving · advising…"):
+        try:
+            initial_state: AgentState = {
+                "input": input_data, "predicted_price": 0.0,
+                "market_data": [], "comps": [], "final_advice": "",
+                "model_metrics": model_metrics, "error": "",
+            }
+            result = agent_app.invoke(initial_state)
+        except Exception as e:
+            st.error(f"❌ Agent execution failed: {e}")
+            st.stop()
+
+    if result.get("error"):
+        st.warning(f"⚠️ Note: {result['error']}")
+
+    price    = result["predicted_price"]
+    val_diff = price - estimated_value
+    diff_pct = (val_diff / estimated_value) * 100 if estimated_value else 0
+    ppsf     = price / carpet_area if carpet_area else 0
+
+    # ── PRICE HERO ─────────────────────────────────────────────────────────
+    direction  = "📈" if val_diff > 0 else "📉"
+    diff_color = "#2ECC71" if val_diff > 0 else "#E74C3C"
+    diff_label = "above" if val_diff > 0 else "below"
+
+    st.markdown(f"""
+    <div class="price-hero">
+        <div class="price-label">Predicted Market Price</div>
+        <div class="price-value">₹{price:,.0f}</div>
+        <div class="price-sub">
+            {direction} &nbsp;
+            <span style="color:{diff_color}; font-weight:600;">{abs(diff_pct):.1f}% {diff_label}</span>
+            &nbsp; your estimate of ₹{estimated_value:,.0f}
+            &nbsp;&nbsp;·&nbsp;&nbsp; ₹{ppsf:,.0f} per sq ft
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── REPORT ─────────────────────────────────────────────────────────────
+    st.markdown("""
+    <div class="section-heading">Advisory Report</div>
+    <div class="section-sub">AI-generated structured investment analysis across 4 sections</div>
+    <div class="gold-line"></div>
+    """, unsafe_allow_html=True)
+
+    # Section 1 — Property Summary
+    with st.expander("📊  Section 1 — Property Summary & Valuation", expanded=True):
+        st.markdown('<div class="report-section-title">Property Summary</div>', unsafe_allow_html=True)
+        val_color = "#2ECC71" if val_diff > 0 else "#E74C3C"
+        st.markdown(f"""
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-value">₹{price:,.0f}</div>
+                <div class="metric-label">Predicted Price</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">₹{ppsf:,.0f}</div>
+                <div class="metric-label">Price / sq ft</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" style="color:{val_color}">{diff_pct:+.1f}%</div>
+                <div class="metric-label">vs Your Estimate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{carpet_area:,.0f}</div>
+                <div class="metric-label">Area (sq ft)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{num_rooms}</div>
+                <div class="metric-label">Rooms</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{num_bathrooms}</div>
+                <div class="metric-label">Bathrooms</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Section 2 — Market Intelligence
+    with st.expander("🌍  Section 2 — Market Intelligence (RAG)", expanded=True):
+        st.markdown('<div class="report-section-title">Retrieved Market Insights</div>', unsafe_allow_html=True)
+        rows_html = "".join(
+            f'<div class="insight-row"><div class="insight-num">{i}</div>'
+            f'<div class="insight-text">{ins}</div></div>'
+            for i, ins in enumerate(result["market_data"], 1)
+        )
+        st.markdown(rows_html, unsafe_allow_html=True)
+
+    # Section 3 — Comparable Properties
+    with st.expander("🏘️  Section 3 — Comparable Properties (Comps)", expanded=True):
+        st.markdown('<div class="report-section-title">Similar Properties in Dataset</div>', unsafe_allow_html=True)
+        comps = result.get("comps", [])
+        if comps:
+            st.dataframe(pd.DataFrame(comps), use_container_width=True, hide_index=True)
+            comp_prices = []
+            for c in comps:
+                try:
+                    comp_prices.append(float(c["Sale Price"].replace("₹","").replace(",","")))
+                except: pass
+            if comp_prices:
+                avg   = np.mean(comp_prices)
+                delta = price - avg
+                lc, rc = st.columns(2)
+                lc.metric("Average Comparable Price", f"₹{avg:,.0f}")
+                rc.metric("Your Prediction vs Comps", f"₹{price:,.0f}", delta=f"₹{delta:+,.0f}")
+        else:
+            st.info("No comparable properties found for the given filters.")
+
+    # Section 4 — AI Advice
+    with st.expander("🤖  Section 4 — AI Investment Advice", expanded=True):
+        st.markdown('<div class="report-section-title">Structured Advisory</div>', unsafe_allow_html=True)
+        advice_html = result['final_advice'].replace("\n", "<br>")
+        st.markdown(f'<div class="advice-card">{advice_html}</div>', unsafe_allow_html=True)
+
+    # Disclaimer
+    st.markdown("""
+    <div class="disclaimer-box">
+        <div class="disclaimer-title">⚖️ Legal & Financial Disclaimer</div>
+        <div class="disclaimer-text">
+            This report is produced by an AI system for <strong>informational and educational purposes only</strong>.
+            It does <strong>not</strong> constitute professional financial, investment, or legal advice.
+            Predictions are based on historical training data and do not guarantee future results.
+            Real estate markets are subject to volatility, regulatory changes, and macro-economic risks.<br><br>
+            Always consult a <strong>SEBI-registered investment advisor</strong>, a <strong>licensed property valuer</strong>,
+            and a qualified <strong>legal professional</strong> before making any real estate investment decision.
+            The creators of EstateAI assume no liability for decisions made using this report.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
