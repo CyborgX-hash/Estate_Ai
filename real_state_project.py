@@ -24,7 +24,7 @@ st.set_page_config(
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
