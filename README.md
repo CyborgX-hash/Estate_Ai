@@ -1,16 +1,16 @@
-# 🏠 EstateAI v2.0 — AI-Powered Real Estate Intelligence
+# EstateAI v2.0 — AI-Powered Real Estate Intelligence
 
 **Agentic Property Valuation · FAISS Market Retrieval · Structured Investment Advisory**
 
 ---
 
-## 📖 Overview
+##  Overview
 
 EstateAI is an advanced, AI-powered real estate investment platform built with **Streamlit** and **LangGraph**. It combines traditional Machine Learning property price prediction with a Retrieval-Augmented Generation (RAG) agentic workflow to deliver comprehensive, data-driven investment advisory reports.
 
 ---
 
-## 🎯 Objectives & Capabilities
+##  Objectives & Capabilities
 
 - **Predictive Valuation**: ML-based price prediction using a Random Forest model.
 - **Market Intelligence (RAG)**: Retrieves relevant real estate market patterns and laws using **FAISS** vector search and HuggingFace sentence embeddings.
@@ -20,7 +20,7 @@ EstateAI is an advanced, AI-powered real estate investment platform built with *
 
 ---
 
-## 🔄 System Workflow (LangGraph)
+##  System Workflow (LangGraph)
 
 The application models its logic as a typel-safe state graph moving through the following sequential nodes:
 
@@ -31,7 +31,7 @@ The application models its logic as a typel-safe state graph moving through the 
 
 ---
 
-## 🧠 Tech Stack & Requirements
+##  Tech Stack & Requirements
 
 - **UI Framework**: Streamlit (with Custom Luxury CSS)
 - **Machine Learning**: `scikit-learn`, `pandas`, `numpy`
@@ -39,14 +39,14 @@ The application models its logic as a typel-safe state graph moving through the 
 - **RAG & Embeddings**: `faiss-cpu`, `langchain`, `sentence-transformers`
 - **LLM**: `transformers`, `torch` (`google/flan-t5-base`)
 
-### 📦 Installation
+###  Installation
 
 Ensure you have Python 3.10+ installed, then install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 🚀 Usage
+###  Usage
 
 Run the Streamlit application locally:
 ```bash
@@ -55,7 +55,7 @@ streamlit run real_state_project.py
 
 ---
 
-## 📊 Evaluation Metrics (Random Forest)
+##  Evaluation Metrics (Random Forest)
 
 The predictive model is evaluated on standard regression metrics displayed in the sidebar:
 | Metric | Description |
@@ -66,6 +66,6 @@ The predictive model is evaluated on standard regression metrics displayed in th
 
 ---
 
-## ⚖️ Disclaimer
+##  Disclaimer
 
 This application and the generated reports are for **informational and educational purposes only**. They do not constitute professional financial, investment, or legal advice. Predictions are based on historical data and LLMs. Always consult a certified investment advisor before making financial decisions.

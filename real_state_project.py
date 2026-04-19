@@ -16,7 +16,6 @@ from langgraph.graph import StateGraph, END
 
 st.set_page_config(
     page_title="EstateAI",
-    page_icon="🏠",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -415,9 +414,7 @@ hr { border-color: var(--border) !important; margin: 2rem 0 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# =============================================================================
-# TYPED STATE
-# =============================================================================
+
 class AgentState(TypedDict):
     input:           Dict[str, Any]
     predicted_price: float
@@ -427,18 +424,16 @@ class AgentState(TypedDict):
     model_metrics:   Dict[str, float]
     error:           str
 
-# =============================================================================
-# DATA LOADING & CLEANING
-# =============================================================================
+
 @st.cache_data
 def load_data(path: str = "V3.csv") -> pd.DataFrame:
     try:
         return pd.read_csv(path)
     except FileNotFoundError:
-        st.error("❌ Dataset 'V3.csv' not found. Place it in the project root.")
+        st.error("Dataset 'V3.csv' not found. Place it in the project root.")
         st.stop()
     except Exception as e:
-        st.error(f"❌ Error loading data: {e}")
+        st.error(f"Error loading data: {e}")
         st.stop()
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -455,9 +450,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         df = df.drop("Date", axis=1)
     return df
 
-# =============================================================================
-# MODEL TRAINING
-# =============================================================================
+
 @st.cache_resource
 def train_model(_df: pd.DataFrame):
     base_features   = ["property_tax_rate","carpet_area","num_bathrooms","num_rooms","Estimated Value","Year","month"]
@@ -477,9 +470,7 @@ def train_model(_df: pd.DataFrame):
     }
     return mdl, feature_columns, metrics
 
-# =============================================================================
-# INPUT VALIDATION
-# =============================================================================
+
 def validate_input(data: Dict[str, Any]) -> List[str]:
     errors = []
     if data["carpet_area"] <= 0:                    errors.append("Carpet area must be > 0.")
@@ -492,16 +483,11 @@ def validate_input(data: Dict[str, Any]) -> List[str]:
     if not (1900 <= data["Year"] <= 2030):           errors.append("Year must be 1900–2030.")
     return errors
 
-# =============================================================================
-# PREDICTION
-# =============================================================================
+
 def predict_price(input_data, mdl, feature_columns) -> float:
     filled = {col: input_data.get(col, 0) for col in feature_columns}
     return float(mdl.predict(pd.DataFrame([filled]))[0])
 
-# =============================================================================
-# COMPARABLE PROPERTIES
-# =============================================================================
 def get_comparable_properties(input_data, df_raw, n=3) -> List[Dict]:
     try:
         required = {"carpet_area","num_rooms","Sale Price"}
@@ -524,9 +510,7 @@ def get_comparable_properties(input_data, df_raw, n=3) -> List[Dict]:
     except Exception as e:
         logger.error(f"Comps error: {e}"); return []
 
-# =============================================================================
-# RAG CORPUS
-# =============================================================================
+
 MARKET_CORPUS = [
     "Gurgaon property prices are rising 8% annually driven by IT sector growth.",
     "Gurgaon Golf Course Road has premium residential properties above Rs 10,000 per sq ft.",
@@ -590,9 +574,7 @@ def retrieve_market(query: str, vs) -> List[str]:
     except Exception as e:
         return [f"Retrieval error: {e}"]
     
-# =============================================================================
-# LLM
-# =============================================================================
+
 @st.cache_resource
 def get_llm():
     try:
@@ -629,9 +611,7 @@ def generate_advice(input_data, price, market, llm) -> str:
     except Exception as e:
         return f"Advice generation failed: {e}"
 
-# =============================================================================
-# LANGGRAPH NODES
-# =============================================================================
+
 def predict_node(state: AgentState) -> AgentState:
     try:
         state["predicted_price"] = predict_price(
@@ -678,9 +658,7 @@ def build_graph():
     g.add_edge("advisor", END)
     return g.compile()
 
-# =============================================================================
-# INITIALISE RESOURCES
-# =============================================================================
+
 df_raw         = load_data()
 df_clean       = clean_data(df_raw)
 model, feature_columns, model_metrics = train_model(df_clean)
@@ -694,11 +672,9 @@ st.session_state["vectorstore"]     = vectorstore
 st.session_state["llm"]             = llm
 st.session_state["df_raw"]          = df_raw
 
-# =============================================================================
-# SIDEBAR
-# =============================================================================
+
 with st.sidebar:
-    st.markdown('<div class="sidebar-section">📊 Model Performance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Model Performance</div>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
         st.metric("R² Score",   f"{model_metrics['R² Score']:.4f}")
@@ -708,7 +684,7 @@ with st.sidebar:
         st.metric("Test Rows",  f"{model_metrics['Test Rows']:,}")
     st.metric("RMSE", f"₹{model_metrics['RMSE']:,.0f}")
 
-    st.markdown('<div class="sidebar-section">🔗 Agent Workflow</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Agent Workflow</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="workflow-box">
         Input <span class="arrow">→</span> <span class="node">predict_node</span><br>
@@ -719,18 +695,16 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="sidebar-section">⚙️ Stack</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section">Stack</div>', unsafe_allow_html=True)
     for pill in ["Random Forest","FAISS RAG","Flan-T5","LangGraph","Streamlit"]:
         st.markdown(f'<span class="pill">{pill}</span>', unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.caption("EstateAI v2.0 · For informational use only")
 
-# =============================================================================
-# HERO BANNER
-# =============================================================================
+
 st.markdown("""
 <div class="hero-banner">
-    <div class="hero-badge">🏠 AI-Powered Real Estate Intelligence</div>
+    <div class="hero-badge">AI-Powered Real Estate Intelligence</div>
     <div class="hero-title">Estate<span>AI</span></div>
     <p class="hero-sub">
         Agentic property valuation &nbsp;·&nbsp; FAISS market retrieval &nbsp;·&nbsp; Structured investment advisory
@@ -738,9 +712,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =============================================================================
-# INPUT SECTION
-# =============================================================================
+
 st.markdown("""
 <div class="section-heading">Property Details</div>
 <div class="section-sub">Enter the property parameters to generate your advisory report</div>
@@ -750,36 +722,32 @@ st.markdown("""
 col1, col2, col3 = st.columns(3, gap="medium")
 
 with col1:
-    st.markdown('<div class="input-group-card"><div class="input-group-icon">📐</div><div class="input-group-title">Size & Layout</div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-group-card"><div class="input-group-icon"></div><div class="input-group-title">Size & Layout</div>', unsafe_allow_html=True)
     carpet_area   = st.number_input("Carpet Area (sq ft)", min_value=100.0, max_value=50000.0, value=1000.0, step=50.0)
     num_rooms     = st.number_input("Number of Rooms",      min_value=1,     max_value=20,      value=3)
     num_bathrooms = st.number_input("Number of Bathrooms",  min_value=1,     max_value=15,      value=2)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="input-group-card"><div class="input-group-icon">💰</div><div class="input-group-title">Financials</div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-group-card"><div class="input-group-icon"></div><div class="input-group-title">Financials</div>', unsafe_allow_html=True)
     estimated_value = st.number_input("Estimated Value (₹)", min_value=100_000.0, value=2_000_000.0, step=50_000.0, format="%.0f")
     tax_rate        = st.number_input("Property Tax Rate (%)", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col3:
-    st.markdown('<div class="input-group-card"><div class="input-group-icon">📅</div><div class="input-group-title">Time Period</div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-group-card"><div class="input-group-icon"></div><div class="input-group-title">Time Period</div>', unsafe_allow_html=True)
     year  = st.number_input("Year",  min_value=1990, max_value=2030, value=2023)
     month = st.slider("Month", 1, 12, 6)
     st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# =============================================================================
-# CTA BUTTON — centred
-# =============================================================================
+
 _, btn_col, _ = st.columns([1, 2, 1])
 with btn_col:
-    run_clicked = st.button("⚡  Analyse Property & Generate Report")
+    run_clicked = st.button("Analyse Property & Generate Report")
 
-# =============================================================================
-# RUN AGENT
-# =============================================================================
+
 if run_clicked:
 
     input_data: Dict[str, Any] = {
@@ -795,10 +763,10 @@ if run_clicked:
     errors = validate_input(input_data)
     if errors:
         for e in errors:
-            st.error(f"⚠️ {e}")
+            st.error(f"{e}")
         st.stop()
 
-    with st.spinner("🤖  Agent running — predicting · retrieving · advising…"):
+    with st.spinner("Agent running — predicting · retrieving · advising…"):
         try:
             initial_state: AgentState = {
                 "input": input_data, "predicted_price": 0.0,
@@ -807,19 +775,18 @@ if run_clicked:
             }
             result = agent_app.invoke(initial_state)
         except Exception as e:
-            st.error(f"❌ Agent execution failed: {e}")
+            st.error(f"Agent execution failed: {e}")
             st.stop()
 
     if result.get("error"):
-        st.warning(f"⚠️ Note: {result['error']}")
+        st.warning(f"Note: {result['error']}")
 
     price    = result["predicted_price"]
     val_diff = price - estimated_value
     diff_pct = (val_diff / estimated_value) * 100 if estimated_value else 0
     ppsf     = price / carpet_area if carpet_area else 0
 
-    # ── PRICE HERO ─────────────────────────────────────────────────────────
-    direction  = "📈" if val_diff > 0 else "📉"
+    direction  = "▲" if val_diff > 0 else "▼"
     diff_color = "#2ECC71" if val_diff > 0 else "#E74C3C"
     diff_label = "above" if val_diff > 0 else "below"
 
@@ -836,15 +803,13 @@ if run_clicked:
     </div>
     """, unsafe_allow_html=True)
 
-    # ── REPORT ─────────────────────────────────────────────────────────────
     st.markdown("""
     <div class="section-heading">Advisory Report</div>
     <div class="section-sub">AI-generated structured investment analysis across 4 sections</div>
     <div class="gold-line"></div>
     """, unsafe_allow_html=True)
 
-    # Section 1 — Property Summary
-    with st.expander("📊  Section 1 — Property Summary & Valuation", expanded=True):
+    with st.expander("Section 1 — Property Summary & Valuation", expanded=True):
         st.markdown('<div class="report-section-title">Property Summary</div>', unsafe_allow_html=True)
         val_color = "#2ECC71" if val_diff > 0 else "#E74C3C"
         st.markdown(f"""
@@ -876,8 +841,7 @@ if run_clicked:
         </div>
         """, unsafe_allow_html=True)
 
-    # Section 2 — Market Intelligence
-    with st.expander("🌍  Section 2 — Market Intelligence (RAG)", expanded=True):
+    with st.expander("Section 2 — Market Intelligence (RAG)", expanded=True):
         st.markdown('<div class="report-section-title">Retrieved Market Insights</div>', unsafe_allow_html=True)
         rows_html = "".join(
             f'<div class="insight-row"><div class="insight-num">{i}</div>'
@@ -886,8 +850,7 @@ if run_clicked:
         )
         st.markdown(rows_html, unsafe_allow_html=True)
 
-    # Section 3 — Comparable Properties
-    with st.expander("🏘️  Section 3 — Comparable Properties (Comps)", expanded=True):
+    with st.expander("Section 3 — Comparable Properties (Comps)", expanded=True):
         st.markdown('<div class="report-section-title">Similar Properties in Dataset</div>', unsafe_allow_html=True)
         comps = result.get("comps", [])
         if comps:
@@ -906,16 +869,14 @@ if run_clicked:
         else:
             st.info("No comparable properties found for the given filters.")
 
-    # Section 4 — AI Advice
-    with st.expander("🤖  Section 4 — AI Investment Advice", expanded=True):
+    with st.expander("Section 4 — AI Investment Advice", expanded=True):
         st.markdown('<div class="report-section-title">Structured Advisory</div>', unsafe_allow_html=True)
         advice_html = result['final_advice'].replace("\n", "<br>")
         st.markdown(f'<div class="advice-card">{advice_html}</div>', unsafe_allow_html=True)
 
-    # Disclaimer
     st.markdown("""
     <div class="disclaimer-box">
-        <div class="disclaimer-title">⚖️ Legal & Financial Disclaimer</div>
+        <div class="disclaimer-title">Legal & Financial Disclaimer</div>
         <div class="disclaimer-text">
             This report is produced by an AI system for <strong>informational and educational purposes only</strong>.
             It does <strong>not</strong> constitute professional financial, investment, or legal advice.
