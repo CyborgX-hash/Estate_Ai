@@ -741,3 +741,35 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+# =============================================================================
+# INPUT SECTION
+# =============================================================================
+st.markdown("""
+<div class="section-heading">Property Details</div>
+<div class="section-sub">Enter the property parameters to generate your advisory report</div>
+<div class="gold-line"></div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3, gap="medium")
+
+with col1:
+    st.markdown('<div class="input-group-card"><div class="input-group-icon">📐</div><div class="input-group-title">Size & Layout</div>', unsafe_allow_html=True)
+    carpet_area   = st.number_input("Carpet Area (sq ft)", min_value=100.0, max_value=50000.0, value=1000.0, step=50.0)
+    num_rooms     = st.number_input("Number of Rooms",      min_value=1,     max_value=20,      value=3)
+    num_bathrooms = st.number_input("Number of Bathrooms",  min_value=1,     max_value=15,      value=2)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col2:
+    st.markdown('<div class="input-group-card"><div class="input-group-icon">💰</div><div class="input-group-title">Financials</div>', unsafe_allow_html=True)
+    estimated_value = st.number_input("Estimated Value (₹)", min_value=100_000.0, value=2_000_000.0, step=50_000.0, format="%.0f")
+    tax_rate        = st.number_input("Property Tax Rate (%)", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with col3:
+    st.markdown('<div class="input-group-card"><div class="input-group-icon">📅</div><div class="input-group-title">Time Period</div>', unsafe_allow_html=True)
+    year  = st.number_input("Year",  min_value=1990, max_value=2030, value=2023)
+    month = st.slider("Month", 1, 12, 6)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
